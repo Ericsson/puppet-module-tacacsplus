@@ -1,5 +1,5 @@
 #
-# elanop tacplus class
+# Tacacsplus class to handle the shrubbery.net tac_plus daemon
 # http://www.shrubbery.net/tac_plus
 #
 
