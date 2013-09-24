@@ -5,7 +5,7 @@
 
 
 class tacacsplus (
-    $tacplus_pkg        = "tacacs+-F4.0.4.26-1",
+    $tacplus_pkg        = "tacacs+",
 ) {
 
     if $operatingsystem =~ /RedHat|CentOS/ {
