@@ -1,0 +1,12 @@
+#
+## This file is maintained by puppet. Manual changes will be overwritten.
+## Template is available at tacacsplus/templates/tac_plus.erb
+## Add entries using Puppet.
+#
+
+#%PAM-1.0
+auth [ignore=ignore success=done default=die] /opt/quest/lib64/security/pam_vas3.so
+account [ignore=ignore success=done default=die] /opt/quest/lib64/security/pam_vas3.so
+password [ignore=ignore success=done default=die] /opt/quest/lib64/security/pam_vas3.so
+session [ignore=ignore success=done default=die] /opt/quest/lib64/security/pam_vas3.so
+
