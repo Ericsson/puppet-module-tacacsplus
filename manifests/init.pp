@@ -21,6 +21,7 @@ class tacacsplus (
         ensure  => present,
         owner   => root,
         group   => root,
+        mode    => 0744,
         content => template($init_template)
     }
 
