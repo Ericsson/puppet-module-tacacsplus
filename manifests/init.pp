@@ -25,6 +25,7 @@ class tacacsplus (
     }
 
     file { "/etc/pam.d/tac_plus" :
+        ensure  => present,
         owner   => root,
         group   => root,
         require => Package[$tacplus_pkg],
@@ -34,6 +35,8 @@ class tacacsplus (
     service { "tac_plus" :
         enable => true,
         ensure => running,
+        hasstatus => false,
+        pattern => 'tac_plus',
         require => File['/etc/tac_plus.conf', '/etc/pam.d/tac_plus'],
     }
 }
