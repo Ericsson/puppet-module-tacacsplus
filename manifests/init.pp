@@ -12,8 +12,16 @@ class tacacsplus (
         package { $tacplus_pkg :
             ensure => installed,
         }
+        $init_template = "tacacsplus/tac_plus-redhat-init.erb"
     } else {
         fail ("Operating system not supported")
+    }
+
+    file { "/etc/init.d/tac_plus": 
+        ensure  => present,
+        owner   => root,
+        group   => root,
+        content => template($init_template)
     }
 
     file { "/etc/tac_plus.conf" :
@@ -37,6 +45,6 @@ class tacacsplus (
         ensure => running,
         hasstatus => false,
         pattern => 'tac_plus',
-        require => File['/etc/tac_plus.conf', '/etc/pam.d/tac_plus'],
+        require => File['/etc/tac_plus.conf', '/etc/pam.d/tac_plus', '/etc/init.d/tac_plus'],
     }
 }
