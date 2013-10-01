@@ -24,10 +24,12 @@ if [[ -f ${TACPLUS_PID} || -f /var/lock/subsys/tac_plus ]]; then
     exit 1
 fi
 echo -n "Starting tac_plus:"
-if [ `$TACPLUS_EXE $TACPLUS_ARG -C $TACPLUS_CNF` ]; then
+`$TACPLUS_EXE $TACPLUS_ARG -C $TACPLUS_CNF`
+if [ $? == 0 ]; then
   success
   echo
   touch /var/lock/subsys/tac_plus
+  exit 0
 else
   failure
   echo
