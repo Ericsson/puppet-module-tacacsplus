@@ -8,15 +8,15 @@
 ## Define Users to be authed by PAM
 #Example:
 #
-<% if $users != 'NONE' -%>
+<% if users != 'NONE' -%>
 <% users.each_pair do |user, values| -%>
 user = <%=  user %> {
-    <% if values['member'] -%>
+    <% if defined?(values['member']) -%>
         member = <%= values['member'] -%>
     <% else -%>
         member = all_access
     <% end -%>
-    <% if values['password'] -%>
+    <% if defined?(values['password']) -%>
         login = des <%= values['password'] -%>
         pap = des <%= values['password'] -%>
     <% end %>
