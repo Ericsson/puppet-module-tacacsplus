@@ -1,0 +1,58 @@
+#
+## This file is maintained by puppet. Manual changes will be overwritten.
+## Add entries using Puppet.
+#
+
+## User definitions, e.g. 
+
+### DEFAULT USER
+# Password: tacadmin
+# Create new password with /usr/bin/tac_pwd
+user = tacadmin {
+    member = all_access
+    login = des qF5BOESILk52s
+    pap = des qF5BOESILk52s
+}
+
+### DEFAULT USER (copy)
+# Password: admin
+# Create new password with /usr/bin/tac_pwd
+user = admin {
+    member = all_access
+    login = des qHQu9x0ESzV2g
+    pap = des qHQu9x0ESzV2g
+}
+
+## Define Users to be authed by PAM
+#Example:
+#
+<% if $users != 'NONE' -%>
+<% users.each do |user| -%>
+user = <%=  user %> {
+  member = all_access
+}
+<% end -%>
+<% end -%>
+
+key = <%= tac_key %>
+
+# Admin users
+group = all_access {
+    default service = permit
+    login = PAM
+    pap   = PAM
+
+    # JunOS related settings
+    service = junos-exec {
+        local-user-name = remote
+        allow-commands = ".*"
+        allow-configuration = ".*"
+        deny-commands = ""
+        deny-configuration = ""
+    }
+    service = exec {
+    priv-lvl = 15
+    cisco-av-pair="shell:roles=network-admin"
+    }
+}
+

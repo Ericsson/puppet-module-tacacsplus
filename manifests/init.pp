@@ -6,6 +6,8 @@
 
 class tacacsplus (
     $tacplus_pkg        = "tacacs+",
+    $users              = "NONE",
+    $tac_key            = "CHANGEME",
 ) {
 
     if $operatingsystem =~ /RedHat|CentOS/ {
@@ -30,7 +32,7 @@ class tacacsplus (
         owner   => root,
         group   => root,
         require => Package[$tacplus_pkg],
-#        content => template("tacacsplus/tac_plus.conf.erb"),
+        content => template("tacacsplus/tac_plus.conf.erb"),
     }
 
     file { "/etc/pam.d/tac_plus" :
