@@ -5,36 +5,39 @@
 
 ## User definitions, e.g. 
 
-### DEFAULT USER
-# Password: tacadmin
-# Create new password with /usr/bin/tac_pwd
-user = tacadmin {
-    member = all_access
-    login = des qF5BOESILk52s
-    pap = des qF5BOESILk52s
-}
-
-### DEFAULT USER (copy)
-# Password: admin
-# Create new password with /usr/bin/tac_pwd
-user = admin {
-    member = all_access
-    login = des qHQu9x0ESzV2g
-    pap = des qHQu9x0ESzV2g
-}
-
 ## Define Users to be authed by PAM
 #Example:
 #
 <% if $users != 'NONE' -%>
-<% users.each do |user| -%>
+<% users.each_pair do |user, values| -%>
 user = <%=  user %> {
-  member = all_access
+    <% if values['member'] -%>
+        member = <%= values['member'] -%>
+    <% else -%>
+        member = all_access
+    <% end -%>
+    <% if values['password'] -%>
+        login = des <%= values['password'] -%>
+        pap = des <%= values['password'] -%>
+    <% end %>
 }
 <% end -%>
 <% end -%>
 
 key = <%= tac_key %>
+
+group = show_only {
+        default service = deny
+        login = PAM
+        pap = PAM
+        service = junos-exec {
+                local-user-name = remote
+                allow-commands = "(show .*)|exit"
+                allow-configuration = ""
+                deny-commands = ".*"
+                deny-configuration = ""
+        }
+}
 
 # Admin users
 group = all_access {
