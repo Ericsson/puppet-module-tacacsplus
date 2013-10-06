@@ -8,23 +8,27 @@
 ## Define Users to be authed by PAM
 #Example:
 #
-<% if users != 'NONE' -%>
+<% if @users != 'NONE' -%>
 <% users.each_pair do |user, values| -%>
-user = <%=  user %> {
-    <% if defined?(values['member']) -%>
-        member = <%= values['member'] -%>
-    <% else -%>
-        member = all_access
-    <% end -%>
-    <% if defined?(values['password']) -%>
-        login = des <%= values['password'] -%>
-        pap = des <%= values['password'] -%>
-    <% end %>
+user = <%= user %> {
+  <%- if values -%>
+  <%- if values.has_key?('member') -%>
+  member = <%= values['member'] %>
+  <%- else -%>
+  member = <%= @default_group %>
+  <%- end -%>
+  <%- if values.has_key?('password') -%>
+  login = des <%= values['password'] %>
+  pap = des <%= values['password'] %>
+  <%- end -%>
+  <%- else -%>
+  member = all_access
+  <%- end -%>
 }
 <% end -%>
 <% end -%>
 
-key = <%= tac_key %>
+key = "<%= @tac_key %>"
 
 group = show_only {
         default service = deny

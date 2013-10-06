@@ -8,6 +8,7 @@ class tacacsplus (
     $tacplus_pkg        = "tacacs+",
     $users              = "NONE",
     $tac_key            = "CHANGEME",
+    $default_group      = "all_access",
 ) {
 
     if $operatingsystem =~ /RedHat|CentOS/ {
