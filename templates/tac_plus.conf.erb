@@ -22,7 +22,7 @@ user = <%= user %> {
   pap = des <%= values['password'] %>
   <%- end -%>
   <%- else -%>
-  member = all_access
+  member = <%= @default_group %>
   <%- end -%>
 }
 <% end -%>
