@@ -1,0 +1,81 @@
+### THIS FILE IS MANAGED BY PUPPET - DO NOT EDIT ###
+
+#!/bin/bash
+#
+# /etc/rc.d/init.d/tac_plus
+#
+# chkconfig: 2345 86 14
+# description: TACACS+ Daemon
+
+# Define variables
+TACPLUS_PID=/var/run/tac_plus.pid
+TACPLUS_EXE=/usr/bin/tac_plus
+TACPLUS_ARG=""
+TACPLUS_CNF=/etc/tac_plus.conf
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+case "$1" in
+start)
+# Check to see if tac_plus is running.
+if [[ -f ${TACPLUS_PID} || -f /var/lock/subsys/tac_plus ]]; then
+    echo "tac_plus may already be running. Check for existing tac_plus processes."
+    exit 1
+fi
+echo -n "Starting tac_plus:"
+`$TACPLUS_EXE $TACPLUS_ARG -C $TACPLUS_CNF`
+if [ $? == 0 ]; then
+  success
+  echo
+  touch /var/lock/subsys/tac_plus
+  exit 0
+else
+  failure
+  echo
+  exit 1
+fi
+;;
+stop)
+if [[ -f ${TACPLUS_PID} && -f /var/lock/subsys/tac_plus ]]; then
+    echo -n "Stopping tac_plus:"
+    killproc -p ${TACPLUS_PID}
+    echo
+    rm -f /var/lock/subsys/tac_plus
+    rm -f ${TACPLUS_PID}
+else
+    echo "tac_plus does not appear to be running."
+fi
+;;
+status)
+if [[ -f ${TACPLUS_PID} && -f /var/lock/subsys/tac_plus ]]; then
+       echo "tac_plus pid is `cat ${TACPLUS_PID}`"
+       exit 0
+else
+        echo "tac_plus does not appear to be running."
+        exit 1
+fi
+;;
+restart)
+$0 stop; $0 start
+;;
+reload)
+echo -n "Reloading tac_plus..."
+if [[ -f ${TACPLUS_PID} && -f /var/lock/subsys/tac_plus ]]; then
+    kill -HUP `cat ${TACPLUS_PID}`
+    RETVAL=$?
+fi
+if [ $RETVAL -ne 0 ]; then
+    failure
+else
+    success
+fi
+echo
+
+;;
+*)
+echo "Usage: $0 {start|stop|status|reload|restart}"
+exit 1
+;;
+esac
+
