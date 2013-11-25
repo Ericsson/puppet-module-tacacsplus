@@ -7,6 +7,7 @@
 class tacacsplus (
     $tacplus_pkg        = 'tacacs+',
     $users              = 'NONE',
+    $localusers         = 'NONE',
     $tac_key            = 'CHANGEME',
     $default_group      = 'all_access',
 ) {

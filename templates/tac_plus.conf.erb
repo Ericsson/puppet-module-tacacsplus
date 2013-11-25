@@ -28,6 +28,25 @@ user = <%= user %> {
 <% end -%>
 <% end -%>
 
+<% if @localusers != 'NONE' -%>
+<% localusers.each_pair do |user, values| -%>
+user = <%= user %> {
+  <%- if values -%>
+  <%- if values.has_key?('member') -%>
+  member = <%= values['member'] %>
+  <%- else -%>
+  member = <%= @default_group %>
+  <%- end -%>
+  <%- if values.has_key?('password') -%>
+  login = des <%= values['password'] %>
+  pap = des <%= values['password'] %>
+  <%- end -%>
+  <%- else -%>
+  member = <%= @default_group %>
+  <%- end -%>
+}
+<% end -%>
+<% end -%>
 key = "<%= @tac_key %>"
 
 group = show_only {
