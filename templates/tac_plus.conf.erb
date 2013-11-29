@@ -3,11 +3,8 @@
 ## Add entries using Puppet.
 #
 
-## User definitions, e.g. 
-
 ## Define Users to be authed by PAM
-#Example:
-#
+
 <% if @users != 'NONE' -%>
 <% users.each_pair do |user, values| -%>
 user = <%= user %> {
@@ -20,6 +17,17 @@ user = <%= user %> {
   <%- if values.has_key?('password') -%>
   login = des <%= values['password'] %>
   pap = des <%= values['password'] %>
+  <%- end -%>
+  <%- if values.has_key?('cmd') -%>
+  <%- values['cmd'].each_pair do |cmd, perms| -%>
+  cmd = "<%= cmd -%>" {
+  <%- perms.each do |perm| -%>
+  <%- perm.each_pair do |permission, regex| -%>
+    <%= permission -%> "<%= regex %>"
+  <%- end -%>
+  <%- end -%>
+  }
+  <%- end -%>
   <%- end -%>
   <%- else -%>
   member = <%= @default_group %>
@@ -40,6 +48,17 @@ user = <%= user %> {
   <%- if values.has_key?('password') -%>
   login = des <%= values['password'] %>
   pap = des <%= values['password'] %>
+  <%- end -%>
+  <%- if values.has_key?('cmd') -%>
+  <%- values['cmd'].each_pair do |cmd, perms| -%>
+  cmd = "<%= cmd -%>" {
+  <%- perms.each do |perm| -%>
+  <%- perm.each_pair do |permission, regex| -%>
+    <%= permission -%> "<%= regex %>"
+  <%- end -%>
+  <%- end -%>
+  }
+  <%- end -%>
   <%- end -%>
   <%- else -%>
   member = <%= @default_group %>
