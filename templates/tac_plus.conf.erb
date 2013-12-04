@@ -8,8 +8,21 @@
 ## Define Users to be authed by PAM
 #Example:
 #
+
+<%- if @acl != 'NONE' -%>
+<%- @acl.each_pair do |aclname, list| -%>
+acl = "<%= aclname -%>" {
+    <%- list.each do |perm| -%>
+    <%- perm.each_pair do |permission, regex| -%>
+    <%= permission -%> = "<%= regex %>"
+    <%- end -%>
+    <%- end -%>
+}
+<%- end -%>
+<%- end -%>
+
 <% if @users != 'NONE' -%>
-<% users.each_pair do |user, values| -%>
+<% @users.each_pair do |user, values| -%>
 user = <%= user %> {
   <%- if values -%>
   <%- if values.has_key?('member') -%>
@@ -29,7 +42,7 @@ user = <%= user %> {
 <% end -%>
 
 <% if @localusers != 'NONE' -%>
-<% localusers.each_pair do |user, values| -%>
+<% @localusers.each_pair do |user, values| -%>
 user = <%= user %> {
   <%- if values -%>
   <%- if values.has_key?('member') -%>
@@ -48,6 +61,44 @@ user = <%= user %> {
 <% end -%>
 <% end -%>
 key = "<%= @tac_key %>"
+
+<% if @groups != 'NONE' -%>
+<% @groups.each_pair do |group, values| -%>
+group = <%= group %> {
+    <%- if values -%>
+    <%- if values.has_key?('default_service') -%>
+        default service = <%= values['default_service'] %>
+    <%- else -%>
+        default service = <%= @default_group_default_service %>
+    <%- end -%>
+    <%- if values.has_key?('login') -%>
+        login = <%= values['login'] %>
+    <%- else -%>
+        login = <%= @default_group_login %>
+    <%- end -%>
+    <%- if values.has_key?('pap') -%>
+        pap = <%= values['pap'] %>
+    <%- else -%>
+        pap = <%= @default_group_pap %>
+    <%- end -%>
+    <%- if values.has_key?('acl') -%>
+        acl = <%= values['acl'] %>
+    <%- end -%>
+    <%- if values.has_key?('service') -%>
+    <%- values['service'].each_pair do |service, avp_array| -%>
+        service = "<%= service -%>" {
+        <%- avp_array.each do |avp| -%>
+            <%- avp.each_pair do |attribute, value| -%>
+            <%= attribute -%> = "<%= value %>"
+            <%- end -%>
+        <%- end -%>
+        }
+  <%- end -%>
+  <%- end -%>
+  <%- end -%>
+}
+<%- end -%>
+<%- end -%>
 
 group = show_only {
         default service = deny
