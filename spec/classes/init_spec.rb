@@ -31,6 +31,7 @@ describe 'tacacsplus' do
 
     it { should contain_file('/etc/tac_plus.conf').with_content(/^key = \"CHANGEME\"$/) }
     it { should_not contain_file('/etc/tac_plus.conf').with_content(/user = /) }
+    it { should_not contain_file('/etc/tac_plus.conf').with_content(/^acl = /) }
 
     it { should contain_file('/etc/pam.d/tac_plus').with({
       'ensure' => 'present',
@@ -90,5 +91,48 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(/^  cmd = \"command\" {$/) }
     it { should contain_file('/etc/tac_plus.conf').with_content(/^    permit \"all\"$/) }
     it { should contain_file('/etc/tac_plus.conf').with_content(/^    deny \"nothing\"$/) }
+  end
+
+  context 'with acl param set on valid osfamily' do
+    let :facts do
+      {
+        :osfamily => 'RedHat'
+      }
+    end
+
+    let :params do
+      {
+        :acl => {
+          'acl_name' => [{'permit' => '127.0.0.1'},{'deny' => '192.168.0.*'}],
+          'other_acl' => [{'permit' => '*'}]
+        }
+      }
+    end
+
+    it { should contain_file('/etc/tac_plus.conf').with_content(/^acl = \"acl_name\" {\n    permit = \"127.0.0.1\"\n    deny = \"192.168.0.*\"\n}$/) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(/^acl = \"other_acl\" {\n    permit = \"\*\"\n}$/) }
+  end
+
+  context 'with groups param set on valid osfamily' do
+    let :facts do
+      {
+        :osfamily => 'RedHat'
+      }
+    end
+
+    let :params do
+      {
+        :groups => {
+          'group_name' => {
+            'acl' => 'acl_name',
+            'service' => {
+              'exec' => [{'priv-lvl' => '15'}]
+            }
+          }
+        }
+      }
+    end
+
+    it { should contain_file('/etc/tac_plus.conf').with_content(/^group = group_name {\n        default service = deny\n        login = PAM\n        pap = PAM\n        acl = acl_name\n        service = \"exec\" {\n            priv-lvl = \"15\"\n        }\n}$/) }
   end
 end

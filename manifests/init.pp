@@ -4,11 +4,16 @@
 # http://www.shrubbery.net/tac_plus
 #
 class tacacsplus (
-  $tacplus_pkg   = 'tacacs+',
-  $users         = 'NONE',
-  $localusers    = 'NONE',
-  $tac_key       = 'CHANGEME',
-  $default_group = 'all_access',
+  $tacplus_pkg                      = 'tacacs+',
+  $acl                              = 'NONE',
+  $users                            = 'NONE',
+  $groups                           = 'NONE',
+  $localusers                       = 'NONE',
+  $tac_key                          = 'CHANGEME',
+  $default_group                    = 'all_access',
+  $default_group_login              = 'PAM',
+  $default_group_pap                = 'PAM',
+  $default_group_default_service    = 'deny',
 ) {
 
   case $::osfamily {
