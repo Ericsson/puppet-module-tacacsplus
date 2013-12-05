@@ -34,6 +34,7 @@ class tacacsplus (
   }
 
   file { '/etc/tac_plus.conf':
+    ensure  => present,
     notify  => Service['tac_plus'],
     owner   => 'root',
     group   => 'root',
