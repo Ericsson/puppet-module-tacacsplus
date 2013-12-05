@@ -17,7 +17,7 @@ acl = "<%= aclname -%>" {
 <%- end -%>
 
 <% if @users != 'NONE' -%>
-<% users.each_pair do |user, values| -%>
+<% @users.each_pair do |user, values| -%>
 user = <%= user %> {
   <%- if values -%>
   <%- if values.has_key?('member') -%>
@@ -48,7 +48,7 @@ user = <%= user %> {
 <% end -%>
 
 <% if @localusers != 'NONE' -%>
-<% localusers.each_pair do |user, values| -%>
+<% @localusers.each_pair do |user, values| -%>
 user = <%= user %> {
   <%- if values -%>
   <%- if values.has_key?('member') -%>
