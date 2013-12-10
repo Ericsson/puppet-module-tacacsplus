@@ -109,8 +109,8 @@ describe 'tacacsplus' do
       }
     end
 
-    it { should contain_file('/etc/tac_plus.conf').with_content(/^acl = \"acl_name\" {\n    permit = \"127.0.0.1\"\n    deny = \"192.168.0.*\"\n}$/) }
-    it { should contain_file('/etc/tac_plus.conf').with_content(/^acl = \"other_acl\" {\n    permit = \"\*\"\n}$/) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(/^acl = \"acl_name\" {\n    permit = 127.0.0.1\n    deny = 192.168.0.*\n}$/) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(/^acl = \"other_acl\" {\n    permit = \*\n}$/) }
   end
 
   context 'with groups param set on valid osfamily' do
