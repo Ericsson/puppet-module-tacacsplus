@@ -9,7 +9,7 @@
 acl = "<%= aclname -%>" {
     <%- list.each do |perm| -%>
     <%- perm.each_pair do |permission, regex| -%>
-    <%= permission -%> = "<%= regex %>"
+    <%= permission -%> = <%= regex %>
     <%- end -%>
     <%- end -%>
 }
