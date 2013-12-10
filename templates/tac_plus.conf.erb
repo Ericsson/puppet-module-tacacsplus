@@ -103,7 +103,7 @@ group = <%= group %> {
     <%- end -%>
     <%- if values.has_key?('service') -%>
     <%- values['service'].each_pair do |service, avp_array| -%>
-        service = "<%= service -%>" {
+        service = <%= service -%> {
         <%- avp_array.each do |avp| -%>
             <%- avp.each_pair do |attribute, value| -%>
             <%= attribute -%> = "<%= value %>"
