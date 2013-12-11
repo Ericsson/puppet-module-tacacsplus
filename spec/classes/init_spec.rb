@@ -133,6 +133,6 @@ describe 'tacacsplus' do
       }
     end
 
-    it { should contain_file('/etc/tac_plus.conf').with_content(/^group = group_name {\n        default service = deny\n        login = PAM\n        pap = PAM\n        acl = acl_name\n        service = \"exec\" {\n            priv-lvl = \"15\"\n        }\n}$/) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(/^group = group_name {\n        default service = deny\n        login = PAM\n        pap = PAM\n        acl = acl_name\n        service = exec {\n            priv-lvl = \"15\"\n        }\n}$/) }
   end
 end
