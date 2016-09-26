@@ -7,25 +7,20 @@ describe 'tacacsplus' do
         :osfamily => 'RedHat'
       }
     end
-    it { should include_class('tacacsplus') }
+    it { should contain_class('tacacsplus') }
     it { should contain_package('tacacs+').with ({
-        'ensure'    => 'installed'
+        'ensure' => 'installed'
       })
     }
 
-    it { should contain_file('/etc/init.d/tac_plus').with({
-      'ensure' => 'present',
-      'owner'  => 'root',
-      'group'  => 'root',
-      'mode'   => '0744',
-      })
-    }
+    it { should_not contain_file('/etc/init.d/tac_plus') }
 
     it { should contain_file('/etc/tac_plus.conf').with({
-      'ensure' => 'present',
-      'owner'  => 'root',
-      'group'  => 'root',
+      'ensure'  => 'file',
+      'owner'   => 'root',
+      'group'   => 'root',
       'require' => 'Package[tacacs+]',
+      'notify'  => 'Service[tac_plus]',
       })
     }
 
@@ -33,20 +28,13 @@ describe 'tacacsplus' do
     it { should_not contain_file('/etc/tac_plus.conf').with_content(/user = /) }
     it { should_not contain_file('/etc/tac_plus.conf').with_content(/^acl = /) }
 
-    it { should contain_file('/etc/pam.d/tac_plus').with({
-      'ensure' => 'present',
-      'owner'  => 'root',
-      'group'  => 'root',
-      'require' => 'Package[tacacs+]',
-      })
-    }
+    it { should_not contain_file('/etc/pam.d/tac_plus') }
 
     it { should contain_service('tac_plus').with({
-      'ensure' => 'running',
-      'enable' => 'true',
+      'ensure'    => 'running',
+      'enable'    => 'true',
       'hasstatus' => 'false',
-      'pattern'=> 'tac_plus',
-      'require' => ['File[/etc/tac_plus.conf]', 'File[/etc/pam.d/tac_plus]', 'File[/etc/init.d/tac_plus]'],
+      'pattern'   => 'tac_plus',
       })
     }
   end
@@ -59,7 +47,7 @@ describe 'tacacsplus' do
     end
     it 'should fail' do
       expect {
-        should include_class('tacacsplus')
+        should contain_class('tacacsplus')
       }.to raise_error(Puppet::Error,/Operating system not supported/)
     end
   end
