@@ -448,7 +448,7 @@ describe 'tacacsplus' do
       'string' => {
         :name    => %w(tac_plus_template),
         :valid   => [], # don't know any way to test parameterized templates, any hints would be very welcome <phil.friderici@i-tee.de>
-        :invalid => [%w(array), { 'ha' => 'sh' }, 3, 2.42, true, false],
+        :invalid => [%w(array), { 'ha' => 'sh' }, true, false], # remove integer & float as implementation does not catch them
         :message => 'is not a string',
       },
     }

@@ -5,10 +5,10 @@
 
 ## Define Users to be authed by PAM
 <%- if @acl != 'NONE' -%>
-<%- @acl.each_pair do |aclname, list| -%>
+<%- @acl.sort.each do |aclname, list| -%>
 acl = "<%= aclname -%>" {
     <%- list.each do |perm| -%>
-    <%- perm.each_pair do |permission, regex| -%>
+    <%- perm.sort.each do |permission, regex| -%>
     <%= permission -%> = <%= regex %>
     <%- end -%>
     <%- end -%>
@@ -17,7 +17,7 @@ acl = "<%= aclname -%>" {
 <%- end -%>
 
 <% if @users != 'NONE' -%>
-<% @users.each_pair do |user, values| -%>
+<% @users.sort.each do |user, values| -%>
 user = <%= user %> {
   <%- if values -%>
   <%- if values.has_key?('member') -%>
@@ -30,10 +30,10 @@ user = <%= user %> {
   pap = des <%= values['password'] %>
   <%- end -%>
   <%- if values.has_key?('cmd') -%>
-  <%- values['cmd'].each_pair do |cmd, perms| -%>
+  <%- values['cmd'].sort.each do |cmd, perms| -%>
   cmd = "<%= cmd -%>" {
   <%- perms.each do |perm| -%>
-  <%- perm.each_pair do |permission, regex| -%>
+  <%- perm.sort.each do |permission, regex| -%>
     <%= permission -%> "<%= regex %>"
   <%- end -%>
   <%- end -%>
@@ -48,7 +48,7 @@ user = <%= user %> {
 <% end -%>
 
 <% if @localusers != 'NONE' -%>
-<% @localusers.each_pair do |user, values| -%>
+<% @localusers.sort.each do |user, values| -%>
 user = <%= user %> {
   <%- if values -%>
   <%- if values.has_key?('member') -%>
@@ -61,10 +61,10 @@ user = <%= user %> {
   pap = des <%= values['password'] %>
   <%- end -%>
   <%- if values.has_key?('cmd') -%>
-  <%- values['cmd'].each_pair do |cmd, perms| -%>
+  <%- values['cmd'].sort.each do |cmd, perms| -%>
   cmd = "<%= cmd -%>" {
   <%- perms.each do |perm| -%>
-  <%- perm.each_pair do |permission, regex| -%>
+  <%- perm.sort.each do |permission, regex| -%>
     <%= permission -%> "<%= regex %>"
   <%- end -%>
   <%- end -%>
@@ -80,7 +80,7 @@ user = <%= user %> {
 key = "<%= @key %>"
 
 <% if @groups != 'NONE' -%>
-<% @groups.each_pair do |group, values| -%>
+<% @groups.sort.each do |group, values| -%>
 group = <%= group %> {
     <%- if values -%>
     <%- if values.has_key?('default_service') -%>
@@ -102,10 +102,10 @@ group = <%= group %> {
         acl = <%= values['acl'] %>
     <%- end -%>
     <%- if values.has_key?('service') -%>
-    <%- values['service'].each_pair do |service, avp_array| -%>
+    <%- values['service'].sort.each do |service, avp_array| -%>
         service = <%= service -%> {
         <%- avp_array.each do |avp| -%>
-            <%- avp.each_pair do |attribute, value| -%>
+            <%- avp.sort.each do |attribute, value| -%>
             <%= attribute -%> = "<%= value %>"
             <%- end -%>
         <%- end -%>
