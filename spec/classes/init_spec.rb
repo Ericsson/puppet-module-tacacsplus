@@ -49,7 +49,6 @@ describe 'tacacsplus' do
     |    cisco-av-pair="shell:roles=network-admin"
     |    }
     |}
-    |
   END
 
   describe 'with defaults for all parameters on supported osfamily' do
@@ -60,7 +59,7 @@ describe 'tacacsplus' do
     it do
       should contain_file('/etc/tac_plus.conf').with({
         'ensure'  => 'file',
-        'content' => tac_plus_conf_header + "\n\n" + tac_plus_conf_key + "\n" + tac_plus_conf_footer,
+        'content' => tac_plus_conf_header + tac_plus_conf_key + tac_plus_conf_footer,
         'owner'   => 'root',
         'group'   => 'root',
         'require' => 'Package[tacacs+]',
@@ -109,60 +108,62 @@ describe 'tacacsplus' do
       |    deny = 192.168.0.*
       |    deny = 192.168.1.*
       |}
+      |
       |acl = "acl_deny_only" {
       |    deny = 192.168.0.*
       |}
+      |
       |acl = "acl_permit_only" {
       |    permit = *
       |}
       |
     END
 
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + acl_content + "\n" + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + acl_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => {}, 'user2' => {} } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = all_access
       |}
+      |
       |user = user2 {
       |  member = all_access
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + "\n" + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing <member> key' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'member' => 'specific_access' } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = specific_access
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + "\n" + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing <password> key' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'password' => 'secret' } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = all_access
       |  login = des secret
       |  pap = des secret
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + "\n" + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing <cmd> key' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'cmd' => { 'command' => [{ 'permit' => 'all' }, { 'deny' => 'nothing' }] } } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = all_access
       |  cmd = "command" {
@@ -170,14 +171,14 @@ describe 'tacacsplus' do
       |    deny "nothing"
       |  }
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + "\n" + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing multiple <cmd> keys' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'cmd' => { 'command1' => [{ 'permit' => 'all' }], 'command2' => [{ 'deny' => 'all' }] } } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = all_access
       |  cmd = "command1" {
@@ -187,8 +188,9 @@ describe 'tacacsplus' do
       |    deny "all"
       |  }
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + "\n" + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash' do
@@ -199,13 +201,15 @@ describe 'tacacsplus' do
       |        login = PAM
       |        pap = PAM
       |}
+      |
       |group = group2 {
       |        default service = deny
       |        login = PAM
       |        pap = PAM
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + groups_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing <default_service> key' do
@@ -216,8 +220,9 @@ describe 'tacacsplus' do
       |        login = PAM
       |        pap = PAM
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + groups_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing <login> key' do
@@ -228,8 +233,9 @@ describe 'tacacsplus' do
       |        login = specific
       |        pap = PAM
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + groups_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing <pap> key' do
@@ -240,8 +246,9 @@ describe 'tacacsplus' do
       |        login = PAM
       |        pap = specific
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + groups_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing <acl> key' do
@@ -253,8 +260,9 @@ describe 'tacacsplus' do
       |        pap = PAM
       |        acl = acl1
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + groups_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing <service> key' do
@@ -270,8 +278,9 @@ describe 'tacacsplus' do
       |            other = "242"
       |        }
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + groups_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing multiple <service> keys' do
@@ -288,52 +297,52 @@ describe 'tacacsplus' do
       |            other = "242"
       |        }
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + groups_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
   context 'with localusers set to valid hash' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => {}, 'user2' => {} } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
-      |
-      |
       |user = user1 {
       |  member = all_access
       |}
+      |
       |user = user2 {
       |  member = all_access
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing <member> key' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'member' => 'specific_access' } } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = specific_access
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n" + localusers_content + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing <password> key' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'password' => 'secret' } } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = all_access
       |  login = des secret
       |  pap = des secret
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n" + localusers_content + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing <cmd> key' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'cmd' => { 'command' => [{ 'permit' => 'all' }, { 'deny' => 'nothing' }] } } } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
-      |
       |user = user1 {
       |  member = all_access
       |  cmd = "command" {
@@ -341,8 +350,9 @@ describe 'tacacsplus' do
       |    deny "nothing"
       |  }
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n" + localusers_content + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with default_group set to valid string' do
@@ -355,8 +365,9 @@ describe 'tacacsplus' do
       |user = localuser1 {
       |  member = other_access
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n" + default_group_content + tac_plus_conf_key + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + default_group_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with default_group_login set to valid string' do
@@ -367,8 +378,9 @@ describe 'tacacsplus' do
       |        login = other
       |        pap = PAM
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + default_group_login_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
   end
 
   context 'with default_group_pap set to valid string' do
@@ -379,8 +391,9 @@ describe 'tacacsplus' do
       |        login = PAM
       |        pap = other
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + default_group_login_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
   end
 
   context 'with default_group_default_service set to valid string' do
@@ -391,8 +404,9 @@ describe 'tacacsplus' do
       |        login = PAM
       |        pap = PAM
       |}
+      |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + "\n\n" + tac_plus_conf_key + default_group_login_content + "\n" + tac_plus_conf_footer) }
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
   end
 
   context 'with tac_plus_template set to valid string' do

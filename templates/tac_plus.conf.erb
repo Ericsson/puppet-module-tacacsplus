@@ -5,118 +5,119 @@
 
 ## Define Users to be authed by PAM
 <%- if @acl != 'NONE' -%>
-<%- @acl.sort.each do |aclname, list| -%>
+<%-   @acl.sort.each do |aclname, list| -%>
 acl = "<%= aclname -%>" {
-    <%- list.each do |perm| -%>
-    <%- perm.sort.each do |permission, regex| -%>
+<%-     list.each do |perm| -%>
+<%-       perm.sort.each do |permission, regex| -%>
     <%= permission -%> = <%= regex %>
-    <%- end -%>
-    <%- end -%>
+<%-       end -%>
+<%-     end -%>
 }
-<%- end -%>
-<%- end -%>
 
-<% if @users != 'NONE' -%>
-<% @users.sort.each do |user, values| -%>
+<%-   end -%>
+<%- end -%>
+<%- if @users != 'NONE' -%>
+<%-   @users.sort.each do |user, values| -%>
 user = <%= user %> {
-  <%- if values -%>
-  <%- if values.has_key?('member') -%>
+<%-     if values -%>
+<%-       if values.has_key?('member') -%>
   member = <%= values['member'] %>
-  <%- else -%>
+<%-       else -%>
   member = <%= @default_group %>
-  <%- end -%>
-  <%- if values.has_key?('password') -%>
+<%-       end -%>
+<%-       if values.has_key?('password') -%>
   login = des <%= values['password'] %>
   pap = des <%= values['password'] %>
-  <%- end -%>
-  <%- if values.has_key?('cmd') -%>
-  <%- values['cmd'].sort.each do |cmd, perms| -%>
+<%-       end -%>
+<%-       if values.has_key?('cmd') -%>
+<%-         values['cmd'].sort.each do |cmd, perms| -%>
   cmd = "<%= cmd -%>" {
-  <%- perms.each do |perm| -%>
-  <%- perm.sort.each do |permission, regex| -%>
+<%-           perms.each do |perm| -%>
+<%-             perm.sort.each do |permission, regex| -%>
     <%= permission -%> "<%= regex %>"
-  <%- end -%>
-  <%- end -%>
+<%-             end -%>
+<%-           end -%>
   }
-  <%- end -%>
-  <%- end -%>
-  <%- else -%>
+<%-         end -%>
+<%-       end -%>
+<%-     else -%>
   member = <%= @default_group %>
-  <%- end -%>
+<%-     end -%>
 }
-<% end -%>
-<% end -%>
 
-<% if @localusers != 'NONE' -%>
-<% @localusers.sort.each do |user, values| -%>
+<%-   end -%>
+<%- end -%>
+<%- if @localusers != 'NONE' -%>
+<%-   @localusers.sort.each do |user, values| -%>
 user = <%= user %> {
-  <%- if values -%>
-  <%- if values.has_key?('member') -%>
+<%-     if values -%>
+<%-       if values.has_key?('member') -%>
   member = <%= values['member'] %>
-  <%- else -%>
+<%-       else -%>
   member = <%= @default_group %>
-  <%- end -%>
-  <%- if values.has_key?('password') -%>
+<%-       end -%>
+<%-       if values.has_key?('password') -%>
   login = des <%= values['password'] %>
   pap = des <%= values['password'] %>
-  <%- end -%>
-  <%- if values.has_key?('cmd') -%>
-  <%- values['cmd'].sort.each do |cmd, perms| -%>
+<%-       end -%>
+<%-       if values.has_key?('cmd') -%>
+<%-         values['cmd'].sort.each do |cmd, perms| -%>
   cmd = "<%= cmd -%>" {
-  <%- perms.each do |perm| -%>
-  <%- perm.sort.each do |permission, regex| -%>
+<%-           perms.each do |perm| -%>
+<%-             perm.sort.each do |permission, regex| -%>
     <%= permission -%> "<%= regex %>"
-  <%- end -%>
-  <%- end -%>
+<%-             end -%>
+<%-           end -%>
   }
-  <%- end -%>
-  <%- end -%>
-  <%- else -%>
+<%-         end -%>
+<%-       end -%>
+<%-     else -%>
   member = <%= @default_group %>
-  <%- end -%>
+<%-     end -%>
 }
-<% end -%>
-<% end -%>
+
+<%-   end -%>
+<%- end -%>
 key = "<%= @key %>"
 
-<% if @groups != 'NONE' -%>
-<% @groups.sort.each do |group, values| -%>
+<%- if @groups != 'NONE' -%>
+<%-   @groups.sort.each do |group, values| -%>
 group = <%= group %> {
-    <%- if values -%>
-    <%- if values.has_key?('default_service') -%>
+<%-     if values -%>
+<%-       if values.has_key?('default_service') -%>
         default service = <%= values['default_service'] %>
-    <%- else -%>
+<%-       else -%>
         default service = <%= @default_group_default_service %>
-    <%- end -%>
-    <%- if values.has_key?('login') -%>
+<%-       end -%>
+<%-       if values.has_key?('login') -%>
         login = <%= values['login'] %>
-    <%- else -%>
+<%-       else -%>
         login = <%= @default_group_login %>
-    <%- end -%>
-    <%- if values.has_key?('pap') -%>
+<%-       end -%>
+<%-       if values.has_key?('pap') -%>
         pap = <%= values['pap'] %>
-    <%- else -%>
+<%-       else -%>
         pap = <%= @default_group_pap %>
-    <%- end -%>
-    <%- if values.has_key?('acl') -%>
+<%-       end -%>
+<%-       if values.has_key?('acl') -%>
         acl = <%= values['acl'] %>
-    <%- end -%>
-    <%- if values.has_key?('service') -%>
-    <%- values['service'].sort.each do |service, avp_array| -%>
+<%-       end -%>
+<%-       if values.has_key?('service') -%>
+<%-         values['service'].sort.each do |service, avp_array| -%>
         service = <%= service -%> {
-        <%- avp_array.each do |avp| -%>
-            <%- avp.sort.each do |attribute, value| -%>
+<%-           avp_array.each do |avp| -%>
+<%-             avp.sort.each do |attribute, value| -%>
             <%= attribute -%> = "<%= value %>"
-            <%- end -%>
-        <%- end -%>
+<%-             end -%>
+<%-           end -%>
         }
-  <%- end -%>
-  <%- end -%>
-  <%- end -%>
+<%-         end -%>
+<%-       end -%>
+<%-     end -%>
 }
-<%- end -%>
-<%- end -%>
 
+<%-   end -%>
+<%- end -%>
 group = show_only {
         default service = deny
         login = PAM
@@ -149,4 +150,3 @@ group = all_access {
     cisco-av-pair="shell:roles=network-admin"
     }
 }
-
