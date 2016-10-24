@@ -137,7 +137,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
-  context 'with users set to valid hash providing <member> key' do
+  context 'with users set to valid hash providing supported <member> key (overriding the default)' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'member' => 'specific_access' } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
       |user = user1 {
@@ -148,7 +148,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
-  context 'with users set to valid hash providing <password> key' do
+  context 'with users set to valid hash providing supported <password> key' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'password' => 'secret' } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
       |user = user1 {
@@ -161,7 +161,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
-  context 'with users set to valid hash providing <cmd> key' do
+  context 'with users set to valid hash providing supported <cmd> key' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'cmd' => { 'command' => [{ 'permit' => 'all' }, { 'deny' => 'nothing' }] } } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
       |user = user1 {
@@ -176,7 +176,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
-  context 'with users set to valid hash providing multiple <cmd> keys' do
+  context 'with users set to valid hash providing supported <cmd> keys' do
     let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'cmd' => { 'command1' => [{ 'permit' => 'all' }], 'command2' => [{ 'deny' => 'all' }] } } } }) }
     users_content = <<-END.gsub(/^\s+\|/, '')
       |user = user1 {
@@ -187,6 +187,17 @@ describe 'tacacsplus' do
       |  cmd = "command2" {
       |    deny "all"
       |  }
+      |}
+      |
+    END
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+  end
+
+  context 'with users set to valid hash providing unsupported <unsupported> key (getting suppressed)' do
+    let(:params) { mandatory_params.merge({ :users => { 'user1' => { 'unsupported' => 'value' } } }) }
+    users_content = <<-END.gsub(/^\s+\|/, '')
+      |user = user1 {
+      |  member = all_access
       |}
       |
     END
@@ -212,7 +223,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
-  context 'with groups set to valid hash providing <default_service> key' do
+  context 'with groups set to valid hash providing supported <default_service> key (overriding the default)' do
     let(:params) { mandatory_params.merge({ :groups => { 'group1' => { 'default_service' => 'allow' } } }) }
     groups_content = <<-END.gsub(/^\s+\|/, '')
       |group = group1 {
@@ -225,7 +236,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
-  context 'with groups set to valid hash providing <login> key' do
+  context 'with groups set to valid hash providing supported <login> key (overriding the default)' do
     let(:params) { mandatory_params.merge({ :groups => { 'group1' => { 'login' => 'specific' } } }) }
     groups_content = <<-END.gsub(/^\s+\|/, '')
       |group = group1 {
@@ -238,7 +249,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
-  context 'with groups set to valid hash providing <pap> key' do
+  context 'with groups set to valid hash providing supported <pap> key (overriding the default)' do
     let(:params) { mandatory_params.merge({ :groups => { 'group1' => { 'pap' => 'specific' } } }) }
     groups_content = <<-END.gsub(/^\s+\|/, '')
       |group = group1 {
@@ -251,7 +262,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
-  context 'with groups set to valid hash providing <acl> key' do
+  context 'with groups set to valid hash providing supported <acl> key' do
     let(:params) { mandatory_params.merge({ :groups => { 'group1' => { 'acl' => 'acl1' } } }) }
     groups_content = <<-END.gsub(/^\s+\|/, '')
       |group = group1 {
@@ -265,7 +276,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
-  context 'with groups set to valid hash providing <service> key' do
+  context 'with groups set to valid hash providing supported <service> key' do
     let(:params) { mandatory_params.merge({ :groups => { 'group1' => { 'service' => { 'exec' => [{ 'priv-lvl' => '15' }, { 'other' => '242' }] } } } }) }
 
     groups_content = <<-END.gsub(/^\s+\|/, '')
@@ -283,7 +294,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
-  context 'with groups set to valid hash providing multiple <service> keys' do
+  context 'with groups set to valid hash providing supported <service> keys' do
     let(:params) { mandatory_params.merge({ :groups => { 'group1' => { 'service' => { 'exec' => [{ 'priv-lvl' => '15' }], 'other' => [{ 'other' => '242' }] } } } }) }
     groups_content = <<-END.gsub(/^\s+\|/, '')
       |group = group1 {
@@ -301,6 +312,20 @@ describe 'tacacsplus' do
     END
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
+
+  context 'with groups set to valid hash providing unsupported <unsupported> key (getting suppressed)' do
+    let(:params) { mandatory_params.merge({ :groups => { 'group1' => { 'unsupported' => 'value' } } }) }
+    groups_content = <<-END.gsub(/^\s+\|/, '')
+      |group = group1 {
+      |        default service = deny
+      |        login = PAM
+      |        pap = PAM
+      |}
+      |
+    END
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+  end
+
   context 'with localusers set to valid hash' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => {}, 'user2' => {} } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
@@ -316,7 +341,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
-  context 'with localusers set to valid hash providing <member> key' do
+  context 'with localusers set to valid hash providing supported <member> key (overriding the default)' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'member' => 'specific_access' } } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
       |user = user1 {
@@ -327,7 +352,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
-  context 'with localusers set to valid hash providing <password> key' do
+  context 'with localusers set to valid hash providing supported <password> key' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'password' => 'secret' } } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
       |user = user1 {
@@ -340,7 +365,7 @@ describe 'tacacsplus' do
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
-  context 'with localusers set to valid hash providing <cmd> key' do
+  context 'with localusers set to valid hash providing supported <cmd> key' do
     let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'cmd' => { 'command' => [{ 'permit' => 'all' }, { 'deny' => 'nothing' }] } } } }) }
     localusers_content = <<-END.gsub(/^\s+\|/, '')
       |user = user1 {
@@ -353,6 +378,34 @@ describe 'tacacsplus' do
       |
     END
     it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
+  end
+
+  context 'with localusers set to valid hash providing supported <cmd> keys' do
+    let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'cmd' => { 'command1' => [{ 'permit' => 'all' }], 'command2' => [{ 'deny' => 'all' }] } } } }) }
+    users_content = <<-END.gsub(/^\s+\|/, '')
+      |user = user1 {
+      |  member = all_access
+      |  cmd = "command1" {
+      |    permit "all"
+      |  }
+      |  cmd = "command2" {
+      |    deny "all"
+      |  }
+      |}
+      |
+    END
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+  end
+
+  context 'with localusers set to valid hash providing unsupported <unsupported> key (getting suppressed)' do
+    let(:params) { mandatory_params.merge({ :localusers => { 'user1' => { 'unsupported' => 'value' } } }) }
+    users_content = <<-END.gsub(/^\s+\|/, '')
+      |user = user1 {
+      |  member = all_access
+      |}
+      |
+    END
+    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with default_group set to valid string' do
