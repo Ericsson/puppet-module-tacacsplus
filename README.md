@@ -23,9 +23,7 @@ pairs to appear in the ACL section of tac_plus.conf. ACL rules will get sorted
 by their names. If sequence does matter, you could use ascending numbers as
 prefix for your rule names.
 
-Using the default of 'NONE' will not add any rules.
-
-- *Default*: 'NONE'
+- *Default*: {}
 
 ##### Example:
 ```yaml
@@ -98,9 +96,7 @@ Supported attributes:
 - acl (type: String)
 - service (type: Array containing Hashes)
 
-Using the default of 'NONE' will not add any group.
-
-- *Default*: 'NONE'
+- *Default*: {}
 
 ##### Example:
 ```yaml
@@ -162,9 +158,7 @@ Supported attributes:
 - password (type: String) will be set for login and pap
 - cmd (type: Array containing Hashes)
 
-Using the default of 'NONE' will not add any users.
-
-- *Default*: 'NONE'
+- *Default*: {}
 
 ##### Example:
 ```yaml
@@ -239,9 +233,7 @@ Supported attributes:
 - password (type: String) will be set for login and pap
 - cmd (type: Array containing Hashes)
 
-Using the default of 'NONE' will not add any users.
-
-- *Default*: 'NONE'
+- *Default*: {}
 
 ##### Example:
 ```yaml

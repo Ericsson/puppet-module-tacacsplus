@@ -5,10 +5,10 @@
 #
 class tacacsplus (
   $tacplus_pkg                   = 'tacacs+',
-  $acl                           = 'NONE',
-  $users                         = 'NONE',
-  $groups                        = 'NONE',
-  $localusers                    = 'NONE',
+  $acl                           = {},
+  $users                         = {},
+  $groups                        = {},
+  $localusers                    = {},
   $key                           = 'CHANGEME',
   $default_group                 = 'all_access',
   $default_group_login           = 'PAM',
