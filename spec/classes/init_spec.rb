@@ -512,7 +512,25 @@ describe 'tacacsplus' do
 
   describe 'variable type and content validations' do
     validations = {
+      'boolean/stringified' => {
+        :name    => %w(manage_init_script manage_pam),
+        :valid   => [true, 'true', false, 'false'],
+        :invalid => ['string', %w(array), { 'ha' => 'sh' }, 3, 2.42, nil],
+        :message => '(is not a boolean|Requires( either)? string to work with|Unknown type of boolean given)',
+      },
+      'hash' => {
+        :name    => %w(acl groups localusers users),
+        :valid   => [], # valid hashes are to complex to block test them here.
+        :invalid => ['string', %w(array), 3, 2.42, true, false, nil],
+        :message => 'is not a Hash',
+      },
       'string' => {
+        :name    => %w(default_group default_group_default_service default_group_login default_group_pap key tacplus_pkg),
+        :valid   => %w(string),
+        :invalid => [%w(array), { 'ha' => 'sh' }, true, false], # Downgrade for Puppet 3.x: remove fixnum and float
+        :message => 'is not a string',
+      },
+      'string (template)' => {
         :name    => %w(tac_plus_template),
         :valid   => [], # don't know any way to test parameterized templates, any hints would be very welcome <phil.friderici@i-tee.de>
         :invalid => [%w(array), { 'ha' => 'sh' }, true, false], # remove integer & float as implementation does not catch them

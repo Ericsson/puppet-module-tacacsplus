@@ -19,6 +19,7 @@ class tacacsplus (
   $manage_pam                    = false,
 ) {
 
+  # preparations
   case $::osfamily {
     default: {
       fail ('Operating system not supported')
@@ -34,8 +35,34 @@ class tacacsplus (
   } else {
     $tac_plus_template_real = $tac_plus_template
   }
-  validate_string($tac_plus_template_real)
 
+  $manage_init_script_bool = str2bool($manage_init_script)
+  $manage_pam_bool = str2bool($manage_pam)
+
+  # validations
+  validate_bool(
+    $manage_init_script_bool,
+    $manage_pam_bool,
+  )
+
+  validate_hash(
+    $acl,
+    $groups,
+    $localusers,
+    $users,
+  )
+
+  validate_string(
+    $default_group,
+    $default_group_default_service,
+    $default_group_login,
+    $default_group_pap,
+    $key,
+    $tacplus_pkg,
+    $tac_plus_template_real,
+  )
+
+  # functionality
   package { $tacplus_pkg:
     ensure => 'installed',
   }
