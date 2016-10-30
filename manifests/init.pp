@@ -21,17 +21,17 @@ class tacacsplus (
 
   # preparations
   case $::osfamily {
+    'RedHat': {
+      $init_template             = 'tacacsplus/tac_plus-redhat-init.erb'
+      $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
+    }
     default: {
       fail ('Operating system not supported')
-    }
-    'RedHat': {
-      $init_template = 'tacacsplus/tac_plus-redhat-init.erb'
-      $default_tac_plus_template = 'tacacsplus/tac_plus.conf.erb'
     }
   }
 
   if $tac_plus_template == undef {
-    $tac_plus_template_real = $default_tac_plus_template
+    $tac_plus_template_real = $tac_plus_template_default
   } else {
     $tac_plus_template_real = $tac_plus_template
   }
