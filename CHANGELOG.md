@@ -2,7 +2,7 @@
 
 Changelog
 
-## 2016-10-30 - Release 1.0.0
+## 2016-11-02 - Release 1.0.0
 ### Breaking News
 
 This release breaks with backward compatibility.
