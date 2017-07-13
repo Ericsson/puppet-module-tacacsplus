@@ -27,7 +27,7 @@ class tacacsplus (
       $tac_plus_service          = 'tac_plus'
       $tac_plus_config           = '/etc/tac_plus.conf'
     }
-    'Ubuntu': {
+    'Debian': {
       $init_template             = undef # Default init template for Ubuntu 16 from installer
       $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
       $tac_plus_service          = 'tacacs_plus'
