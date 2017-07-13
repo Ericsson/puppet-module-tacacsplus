@@ -24,6 +24,14 @@ class tacacsplus (
     'RedHat': {
       $init_template             = 'tacacsplus/tac_plus-redhat-init.erb'
       $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
+      $tac_plus_service          = 'tac_plus'
+      $tac_plus_config           = '/etc/tac_plus.conf'
+    }
+    'Ubuntu': {
+      $init_template             = undef # Default init template for Ubuntu 16 from installer
+      $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
+      $tac_plus_service          = 'tacacs_plus'
+      $tac_plus_config           = '/etc/tacacs+/tac_plus.conf'
     }
     default: {
       fail ('Operating system not supported')
@@ -67,28 +75,30 @@ class tacacsplus (
     ensure => 'installed',
   }
 
-  if $manage_init_script == true {
+  # Don't manage init script for Ubuntu
+  if ($manage_init_script == true) and ($::osfamily != 'Ubuntu') {
     file { '/etc/init.d/tac_plus':
       ensure  => 'file',
       content => template($init_template),
       owner   => 'root',
       group   => 'root',
       mode    => '0744',
-      before  => Service['tac_plus'],
+      before  => Service[$tac_plus_service],
     }
   }
 
   # TODO: what about the mode?
-  file { '/etc/tac_plus.conf':
+  file { $tac_plus_config:
     ensure  => 'file',
     content => template($tac_plus_template_real),
     owner   => 'root',
     group   => 'root',
     require => Package[$tacplus_pkg],
-    notify  => Service['tac_plus'],
+    notify  => Service[$tac_plus_service],
   }
 
-  if $manage_pam == true {
+  # PAM not supported on Ubuntu
+  if ($manage_pam == true) and ($::osfamily != 'Ubuntu') {
     # TODO: can/should we use the pam module to manage this?
     # TODO: What about the mode?
     file { '/etc/pam.d/tac_plus':
@@ -97,14 +107,14 @@ class tacacsplus (
       owner   => 'root',
       group   => 'root',
       require => Package[$tacplus_pkg],
-      before  => Service['tac_plus'],
+      before  => Service[$tac_plus_service],
     }
   }
 
-  service { 'tac_plus':
+  service { $tac_plus_service:
     ensure    => 'running',
     enable    => true,
     hasstatus => false,
-    pattern   => 'tac_plus',
+    pattern   => $tac_plus_service,
   }
 }
