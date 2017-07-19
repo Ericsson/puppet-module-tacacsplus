@@ -20,14 +20,14 @@ class tacacsplus (
 ) {
 
   # preparations
-  case $::osfamily {
+  case $::operatingsystem {
     'RedHat': {
       $init_template             = 'tacacsplus/tac_plus-redhat-init.erb'
       $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
       $tac_plus_service          = 'tac_plus'
       $tac_plus_config           = '/etc/tac_plus.conf'
     }
-    'Debian': {
+    'Ubuntu': {
       $init_template             = undef # Default init template for Ubuntu 16 from installer
       $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
       $tac_plus_service          = 'tacacs_plus'
@@ -76,7 +76,7 @@ class tacacsplus (
   }
 
   # Don't manage init script for Ubuntu
-  if ($manage_init_script == true) and ($::osfamily != 'Ubuntu') {
+  if ($manage_init_script == true) and ($::operatingsystem != 'Ubuntu') {
     file { '/etc/init.d/tac_plus':
       ensure  => 'file',
       content => template($init_template),
@@ -98,7 +98,7 @@ class tacacsplus (
   }
 
   # PAM not supported on Ubuntu
-  if ($manage_pam == true) and ($::osfamily != 'Ubuntu') {
+  if ($manage_pam == true) and ($::operatingsystem != 'Ubuntu') {
     # TODO: can/should we use the pam module to manage this?
     # TODO: What about the mode?
     file { '/etc/pam.d/tac_plus':

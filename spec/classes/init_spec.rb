@@ -51,7 +51,7 @@ describe 'tacacsplus' do
     |}
   END
 
-  describe 'with defaults for all parameters on supported osfamily' do
+  describe 'with defaults for all parameters on supported operatingsystem' do
     it { should compile.with_all_deps }
     it { should contain_class('tacacsplus') }
     it { should contain_package('tacacs+').with({ 'ensure' => 'installed' }) }
@@ -77,8 +77,8 @@ describe 'tacacsplus' do
     end
   end
 
-  context 'with defaults for all parameters on unsupported osfamily' do
-    let(:facts) { { :osfamily => 'Solaris' } }
+  context 'with defaults for all parameters on unsupported operatingsystem' do
+    let(:facts) { { :operatingsystem => 'Solaris' } }
     it 'should fail' do
       expect { should contain_class(subject) }.to raise_error(Puppet::Error, /Operating system not supported/)
     end

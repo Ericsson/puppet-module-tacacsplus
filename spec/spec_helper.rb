@@ -14,6 +14,6 @@ end
 
 def mandatory_global_facts
   {
-    :osfamily => 'RedHat',
+    :operatingsystem => 'RedHat',
   }
 end
