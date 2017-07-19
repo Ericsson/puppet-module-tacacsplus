@@ -57,8 +57,9 @@ describe 'tacacsplus' do
     it { should contain_package('tacacs+').with({ 'ensure' => 'installed' }) }
     it { should_not contain_file('/etc/init.d/tac_plus') }
     it do
-      should contain_file('/etc/tac_plus.conf').with({
+      should contain_file('tacas_plus_config').with({
         'ensure'  => 'file',
+        'path'    => '/etc/tac_plus.conf',
         'content' => tac_plus_conf_header + tac_plus_conf_key + tac_plus_conf_footer,
         'owner'   => 'root',
         'group'   => 'root',
@@ -88,7 +89,7 @@ describe 'tacacsplus' do
   context 'with tacplus_pkg set to valid string <package_name>' do
     let(:params) { mandatory_params.merge({ :tacplus_pkg => 'package_name', :manage_pam => true }) }
     it { should contain_package('package_name') }
-    it { should contain_file('/etc/tac_plus.conf').with_require('Package[package_name]') }
+    it { should contain_file('tacas_plus_config').with_require('Package[package_name]') }
     it { should contain_file('/etc/pam.d/tac_plus').with_require('Package[package_name]') }
   end
 
@@ -120,7 +121,7 @@ describe 'tacacsplus' do
       |
     END
 
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + acl_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + acl_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash' do
@@ -135,7 +136,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing supported <member> key (overriding the default)' do
@@ -146,7 +147,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing supported <password> key' do
@@ -159,7 +160,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing supported <cmd> key' do
@@ -174,7 +175,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing supported <cmd> keys' do
@@ -191,7 +192,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with users set to valid hash providing unsupported <unsupported> key (getting suppressed)' do
@@ -202,7 +203,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash' do
@@ -221,7 +222,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing supported <default_service> key (overriding the default)' do
@@ -234,7 +235,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing supported <login> key (overriding the default)' do
@@ -247,7 +248,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing supported <pap> key (overriding the default)' do
@@ -260,7 +261,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing supported <acl> key' do
@@ -274,7 +275,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing supported <service> key' do
@@ -292,7 +293,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing supported <service> keys' do
@@ -311,7 +312,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with groups set to valid hash providing unsupported <unsupported> key (getting suppressed)' do
@@ -324,7 +325,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + groups_content + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash' do
@@ -339,7 +340,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing supported <member> key (overriding the default)' do
@@ -350,7 +351,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing supported <password> key' do
@@ -363,7 +364,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing supported <cmd> key' do
@@ -378,7 +379,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + localusers_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing supported <cmd> keys' do
@@ -395,7 +396,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with localusers set to valid hash providing unsupported <unsupported> key (getting suppressed)' do
@@ -406,7 +407,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + users_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with default_group set to valid string' do
@@ -421,7 +422,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + default_group_content + tac_plus_conf_key + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + default_group_content + tac_plus_conf_key + tac_plus_conf_footer) }
   end
 
   context 'with default_group_login set to valid string' do
@@ -434,7 +435,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
   end
 
   context 'with default_group_pap set to valid string' do
@@ -447,7 +448,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
   end
 
   context 'with default_group_default_service set to valid string' do
@@ -460,7 +461,7 @@ describe 'tacacsplus' do
       |}
       |
     END
-    it { should contain_file('/etc/tac_plus.conf').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
+    it { should contain_file('tacas_plus_config').with_content(tac_plus_conf_header + tac_plus_conf_key + default_group_login_content + tac_plus_conf_footer) }
   end
 
   context 'with tac_plus_template set to valid string' do

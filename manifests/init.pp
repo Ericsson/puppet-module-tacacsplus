@@ -88,8 +88,9 @@ class tacacsplus (
   }
 
   # TODO: what about the mode?
-  file { $tac_plus_config:
+  file { 'tacas_plus_config':
     ensure  => 'file',
+    path    => $tac_plus_config,
     content => template($tac_plus_template_real),
     owner   => 'root',
     group   => 'root',
