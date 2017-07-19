@@ -470,7 +470,7 @@ describe 'tacacsplus' do
   end
 
   context 'with manage_init_script set to valid boolean <true>' do
-    let(:params) { { :manage_init_script => true } }
+    let(:params) { mandatory_params.merge({ :manage_init_script => true }) }
     manage_init_script_content = File.read(fixtures('tac_plus-redhat-init'))
     it do
       should contain_file('/etc/init.d/tac_plus').with({
@@ -481,6 +481,14 @@ describe 'tacacsplus' do
         'mode'    => '0744',
         'before'  => 'Service[tacas_plus_service]',
       })
+    end
+  end
+
+  context 'with manage_init_script set to valid boolean <true> on operatingsystem without supporting it' do
+    let(:facts) { { :operatingsystem => 'Ubuntu' } }
+    let(:params) { mandatory_params.merge({ :manage_init_script => true }) }
+    it 'should fail' do
+      expect { should contain_class(subject) }.to raise_error(Puppet::Error, /tacasplus::manage_init_script is not supported for this operating system/)
     end
   end
 
@@ -509,6 +517,14 @@ describe 'tacacsplus' do
         'require' => 'Package[tacacs+]',
         'before'  => 'Service[tacas_plus_service]',
       })
+    end
+  end
+
+  context 'with manage_pam set to valid boolean <true> on operatingsystem without supporting it' do
+    let(:facts) { { :operatingsystem => 'Ubuntu' } }
+    let(:params) { mandatory_params.merge({ :manage_pam => true }) }
+    it 'should fail' do
+      expect { should contain_class(subject) }.to raise_error(Puppet::Error, /tacasplus::manage_pam is not supported for this operating system/)
     end
   end
 

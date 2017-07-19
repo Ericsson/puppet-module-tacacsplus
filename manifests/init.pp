@@ -23,12 +23,14 @@ class tacacsplus (
   case $::operatingsystem {
     'RedHat': {
       $init_template             = 'tacacsplus/tac_plus-redhat-init.erb'
+      $manage_pam_support        = true
       $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
       $tac_plus_service          = 'tac_plus'
       $tac_plus_config           = '/etc/tac_plus.conf'
     }
     'Ubuntu': {
-      $init_template             = undef # Default init template for Ubuntu 16 from installer
+      $init_template             = undef # will also forbid using $manage_init_script, expect init script from package
+      $manage_pam_support        = false
       $tac_plus_template_default = 'tacacsplus/tac_plus.conf.erb'
       $tac_plus_service          = 'tacacs_plus'
       $tac_plus_config           = '/etc/tacacs+/tac_plus.conf'
@@ -75,15 +77,18 @@ class tacacsplus (
     ensure => 'installed',
   }
 
-  # Don't manage init script for Ubuntu
-  if ($manage_init_script == true) and ($::operatingsystem != 'Ubuntu') {
-    file { '/etc/init.d/tac_plus':
-      ensure  => 'file',
-      content => template($init_template),
-      owner   => 'root',
-      group   => 'root',
-      mode    => '0744',
-      before  => Service['tacas_plus_service'],
+  if $manage_init_script == true {
+    if $init_template != undef {
+      file { '/etc/init.d/tac_plus':
+        ensure  => 'file',
+        content => template($init_template),
+        owner   => 'root',
+        group   => 'root',
+        mode    => '0744',
+        before  => Service['tacas_plus_service'],
+      }
+    } else {
+      fail ('tacasplus::manage_init_script is not supported for this operating system.')
     }
   }
 
@@ -98,17 +103,20 @@ class tacacsplus (
     notify  => Service['tacas_plus_service'],
   }
 
-  # PAM not supported on Ubuntu
-  if ($manage_pam == true) and ($::operatingsystem != 'Ubuntu') {
-    # TODO: can/should we use the pam module to manage this?
-    # TODO: What about the mode?
-    file { '/etc/pam.d/tac_plus':
-      ensure  => 'file',
-      content => template('tacacsplus/tac_plus.erb'),
-      owner   => 'root',
-      group   => 'root',
-      require => Package[$tacplus_pkg],
-      before  => Service['tacas_plus_service'],
+  if $manage_pam == true {
+    if $manage_pam_support == true {
+      # TODO: can/should we use the pam module to manage this?
+      # TODO: What about the mode?
+      file { '/etc/pam.d/tac_plus':
+        ensure  => 'file',
+        content => template('tacacsplus/tac_plus.erb'),
+        owner   => 'root',
+        group   => 'root',
+        require => Package[$tacplus_pkg],
+        before  => Service['tacas_plus_service'],
+      }
+    } else {
+      fail ('tacasplus::manage_pam is not supported for this operating system.')
     }
   }
 
