@@ -38,6 +38,12 @@
       "operatingsystemrelease": [
         "6"
       ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "16.04"
+      ]
     }
   ],
   "dependencies": [
