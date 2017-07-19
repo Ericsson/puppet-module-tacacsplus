@@ -63,13 +63,14 @@ describe 'tacacsplus' do
         'owner'   => 'root',
         'group'   => 'root',
         'require' => 'Package[tacacs+]',
-        'notify'  => 'Service[tac_plus]',
+        'notify'  => 'Service[tacas_plus_service]',
       })
     end
     it { should_not contain_file('/etc/pam.d/tac_plus') }
     it do
-      should contain_service('tac_plus').with({
+      should contain_service('tacas_plus_service').with({
         'ensure'    => 'running',
+        'name'      => 'tac_plus',
         'enable'    => 'true',
         'hasstatus' => 'false',
         'pattern'   => 'tac_plus',
@@ -477,7 +478,7 @@ describe 'tacacsplus' do
         'owner'   => 'root',
         'group'   => 'root',
         'mode'    => '0744',
-        'before'  => 'Service[tac_plus]',
+        'before'  => 'Service[tacas_plus_service]',
       })
     end
   end
@@ -505,7 +506,7 @@ describe 'tacacsplus' do
         'owner'   => 'root',
         'group'   => 'root',
         'require' => 'Package[tacacs+]',
-        'before'  => 'Service[tac_plus]',
+        'before'  => 'Service[tacas_plus_service]',
       })
     end
   end

@@ -83,7 +83,7 @@ class tacacsplus (
       owner   => 'root',
       group   => 'root',
       mode    => '0744',
-      before  => Service[$tac_plus_service],
+      before  => Service['tacas_plus_service'],
     }
   }
 
@@ -94,7 +94,7 @@ class tacacsplus (
     owner   => 'root',
     group   => 'root',
     require => Package[$tacplus_pkg],
-    notify  => Service[$tac_plus_service],
+    notify  => Service['tacas_plus_service'],
   }
 
   # PAM not supported on Ubuntu
@@ -107,12 +107,13 @@ class tacacsplus (
       owner   => 'root',
       group   => 'root',
       require => Package[$tacplus_pkg],
-      before  => Service[$tac_plus_service],
+      before  => Service['tacas_plus_service'],
     }
   }
 
-  service { $tac_plus_service:
+  service { 'tacas_plus_service':
     ensure    => 'running',
+    name      => $tac_plus_service,
     enable    => true,
     hasstatus => false,
     pattern   => $tac_plus_service,
