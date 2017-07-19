@@ -78,7 +78,7 @@ describe 'tacacsplus' do
   end
 
   context 'with defaults for all parameters on unsupported osfamily' do
-    let(:facts) { { :osfamily => 'Debian' } }
+    let(:facts) { { :osfamily => 'Solaris' } }
     it 'should fail' do
       expect { should contain_class(subject) }.to raise_error(Puppet::Error, /Operating system not supported/)
     end
